@@ -70,7 +70,7 @@
             <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">
               CortexReact Pro
             </h1>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 uppercase tracking-wider">MOART v3.7 Fixed</span>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 uppercase tracking-wider">MOART v3.8 Detailed Report</span>
           </div>
           <p class="text-xs text-slate-400 hidden sm:block">Sporda Performans Psikolojisi Lab (SPPlab) - Geniş Piyano Pozisyonlu MOART Bataryası</p>
         </div>
@@ -316,10 +316,11 @@
 
   </main>
 
-  <!-- REPORT MODAL -->
+  <!-- REPORT MODAL (TÜM TEKRARLARIN DOKUNMA REAKSİYON SÜRELERİ İLE GÜNCELLENDİ) -->
   <div id="reportModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl relative overflow-hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
       
+      <!-- Modal Header -->
       <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">
         <div class="flex items-center space-x-3">
           <div class="bg-indigo-500/20 p-2 rounded-xl text-indigo-400">
@@ -327,7 +328,7 @@
           </div>
           <div>
             <h3 class="text-lg font-bold text-white">CortexReact MOART Raporu</h3>
-            <p class="text-xs text-slate-400">SPPlab Piyano Pozisyonlu Parmak Skor Kartı</p>
+            <p class="text-xs text-slate-400">SPPlab Reaksiyon & Dokunma Süresi Detay Kartı</p>
           </div>
         </div>
         <button onclick="closeReportModal()" class="text-slate-400 hover:text-white p-2 text-lg">
@@ -335,29 +336,48 @@
         </button>
       </div>
 
-      <div class="grid grid-cols-2 gap-3 mb-6">
-        <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800/80">
+      <!-- General Statistics Grid -->
+      <div class="grid grid-cols-2 gap-3 mb-4">
+        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800/80">
           <span class="text-[11px] text-slate-400 font-medium uppercase">Test Protokolü</span>
           <p id="rptTest" class="text-xs font-bold text-cyan-400 font-mono-custom mt-1">Piyano 10 Parmak</p>
         </div>
-        <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800/80">
+        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800/80">
           <span class="text-[11px] text-slate-400 font-medium uppercase">Ort. Reaksiyon (RT)</span>
-          <p id="rptRT" class="text-xl font-black text-cyan-400 font-mono-custom mt-1">0 ms</p>
+          <p id="rptRT" class="text-lg font-black text-cyan-400 font-mono-custom mt-1">0 ms</p>
         </div>
-        <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800/80">
+        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800/80">
           <span class="text-[11px] text-slate-400 font-medium uppercase">Ort. Hareket (MT)</span>
-          <p id="rptMT" class="text-xl font-black text-amber-400 font-mono-custom mt-1">0 ms</p>
+          <p id="rptMT" class="text-lg font-black text-amber-400 font-mono-custom mt-1">0 ms</p>
         </div>
-        <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800/80">
+        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800/80">
           <span class="text-[11px] text-slate-400 font-medium uppercase">Hatalı / Erken Tepki</span>
-          <p id="rptErrors" class="text-xl font-black text-rose-400 font-mono-custom mt-1">0</p>
+          <p id="rptErrors" class="text-lg font-black text-rose-400 font-mono-custom mt-1">0</p>
         </div>
       </div>
 
-      <div class="flex items-center space-x-3">
+      <!-- TÜM DOKUNMA REAKSİYON SÜRELERİ LİSTESİ (DETAYLI TABLO) -->
+      <div class="flex-1 overflow-y-auto bg-slate-950 rounded-2xl border border-slate-800/80 p-3 mb-4 max-h-56">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">Tüm Denemelerin Dokunma Süreleri:</span>
+        <table class="w-full text-xs text-left">
+          <thead class="text-[10px] text-slate-400 uppercase bg-slate-900 border-b border-slate-800">
+            <tr>
+              <th class="py-2 px-2"># Tekrar</th>
+              <th class="py-2 px-2">Hedef Parmak / Taraf</th>
+              <th class="py-2 px-2 text-right">Reaksiyon Süresi (RT)</th>
+            </tr>
+          </thead>
+          <tbody id="trialLogTableBody" class="divide-y divide-slate-800/50 font-mono-custom">
+            <!-- JavaScript ile Dinamik Doldurulur -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center space-x-3 pt-2">
         <button onclick="downloadCSVReport()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-xl text-xs transition flex items-center justify-center space-x-2">
           <i class="fa-solid fa-download"></i>
-          <span>Raporu İndir (CSV)</span>
+          <span>Tüm Verileri İndir (CSV)</span>
         </button>
         <button onclick="closeReportModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-3 px-5 rounded-xl text-xs transition">
           Kapat
@@ -381,6 +401,7 @@
 
     let reactionTimes = [];
     let movementTimes = [];
+    let trialLogs = []; // Her bir tekrarın ham verilerini saklar
     let errorCount = 0;
 
     let targetSide = 'left';
@@ -465,6 +486,7 @@
       currentRep = 0;
       reactionTimes = [];
       movementTimes = [];
+      trialLogs = [];
       errorCount = 0;
 
       document.getElementById('badgeRT').textContent = '0 ms';
@@ -484,7 +506,6 @@
       });
     }
 
-    // TOGGLE START / CANCEL BUTTON
     function toggleTestBattery() {
       if (isTestActive) {
         cancelTestBattery();
@@ -572,11 +593,20 @@
     function handleInput(inputCode) {
       if (!isTestActive) return;
 
+      // Erken basma kaydı
       if (isWaitingForStimulus) {
         if (stimulusTimeout) clearTimeout(stimulusTimeout);
         errorCount++;
         document.getElementById('badgeErrors').textContent = errorCount;
         instructionBanner.textContent = '⚠️ ERKEN BASILDI! Lütfen uyaran görünene kadar bekleyin.';
+        
+        trialLogs.push({
+          rep: currentRep + 1,
+          target: activeTest === 'fingers5' ? fingerNames[activeFingerCode] || '—' : targetSide,
+          rt: 'ERKEN',
+          status: 'Erken Basma'
+        });
+
         playBeep(250, 0.2);
         setTimeout(nextTrial, 1200);
         return;
@@ -586,32 +616,26 @@
       const rt = (releaseTime > 0 ? releaseTime : touchTime) - stimulusTime;
       const mt = releaseTime > 0 ? touchTime - releaseTime : 0;
 
-      if (activeTest === 'fingers5') {
-        if (inputCode !== activeFingerCode) {
-          errorCount++;
-          document.getElementById('badgeErrors').textContent = errorCount;
-          instructionBanner.textContent = `❌ YANLIŞ PARMAK! Doğru hedef: ${fingerNames[activeFingerCode]}`;
-          playBeep(250, 0.2);
-          currentRep++;
-          setTimeout(nextTrial, 1200);
-          return;
-        }
-      }
+      let targetLabel = activeTest === 'fingers5' ? fingerNames[activeFingerCode] : (targetSide === 'left' ? 'Sol' : 'Sağ');
 
-      if (activeTest === 'gonogo' && targetColor === 'red') {
+      if (activeTest === 'fingers5' && inputCode !== activeFingerCode) {
         errorCount++;
         document.getElementById('badgeErrors').textContent = errorCount;
-        instructionBanner.textContent = '❌ HATALI TEPKİ! Kırmızı ışıkta dokunmamanız gerekiyordu!';
+        instructionBanner.textContent = `❌ YANLIŞ PARMAK! Doğru hedef: ${fingerNames[activeFingerCode]}`;
+        
+        trialLogs.push({ rep: currentRep + 1, target: targetLabel, rt: `${rt} ms`, status: 'Yanlış Parmak' });
         playBeep(250, 0.2);
         currentRep++;
         setTimeout(nextTrial, 1200);
         return;
       }
 
-      if (activeTest === 'choice' && inputCode !== targetSide) {
+      if (activeTest === 'gonogo' && targetColor === 'red') {
         errorCount++;
         document.getElementById('badgeErrors').textContent = errorCount;
-        instructionBanner.textContent = '❌ TERS TARAF! Doğru taraftaki ışığa basmalısınız.';
+        instructionBanner.textContent = '❌ HATALI TEPKİ! Kırmızı ışıkta dokunmamanız gerekiyordu!';
+        
+        trialLogs.push({ rep: currentRep + 1, target: 'Kırmızı (No-Go)', rt: `${rt} ms`, status: 'Kırmızıya Dokunuldu' });
         playBeep(250, 0.2);
         currentRep++;
         setTimeout(nextTrial, 1200);
@@ -620,6 +644,8 @@
 
       reactionTimes.push(rt);
       if (mt > 0) movementTimes.push(mt);
+
+      trialLogs.push({ rep: currentRep + 1, target: targetLabel, rt: `${rt} ms`, status: 'Başarılı' });
 
       updateStatsBadges(rt, mt);
       playBeep(1200, 0.08);
@@ -683,6 +709,25 @@
       document.getElementById('rptMT').textContent = `${avgMT} ms`;
       document.getElementById('rptErrors').textContent = errorCount;
 
+      // TÜM DOKUNMA REAKSİYON SÜRELERİNİ TABLOYA DOLDUR
+      const tbody = document.getElementById('trialLogTableBody');
+      tbody.innerHTML = '';
+
+      if (trialLogs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" class="py-3 text-center text-slate-500">Henüz kaydedilmiş dokunma verisi yok.</td></tr>';
+      } else {
+        trialLogs.forEach(log => {
+          const row = document.createElement('tr');
+          const statusClass = log.status === 'Başarılı' ? 'text-cyan-400' : 'text-rose-400 font-bold';
+          row.innerHTML = `
+            <td class="py-1.5 px-2 text-slate-300">Tekrar #${log.rep}</td>
+            <td class="py-1.5 px-2 text-slate-400">${log.target}</td>
+            <td class="py-1.5 px-2 text-right ${statusClass}">${log.rt} (${log.status})</td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+
       document.getElementById('reportModal').classList.remove('hidden');
     }
 
@@ -703,16 +748,16 @@
         + `Ortalama Reaksiyon (RT ms),${avgRT}\n`
         + `Ortalama Hareket (MT ms),${avgMT}\n`
         + `Erken/Hatali Basma,${errorCount}\n\n`
-        + "Tekrar No,Reaksiyon Zamanı (ms)\n";
+        + "Tekrar No,Hedef,Dokunma Reaksiyon Süresi (RT),Durum\n";
 
-      reactionTimes.forEach((time, index) => {
-        csvContent += `${index + 1},${time}\n`;
+      trialLogs.forEach(log => {
+        csvContent += `${log.rep},${log.target},${log.rt},${log.status}\n`;
       });
 
       const encodedUri = encodeURI(csvContent);
       const link = document.createElement("a");
       link.setAttribute("href", encodedUri);
-      link.setAttribute("download", `CortexReact_MOART_SPPlab_Rapor_${Date.now()}.csv`);
+      link.setAttribute("download", `CortexReact_MOART_SPPlab_Dokunma_Raporu_${Date.now()}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
