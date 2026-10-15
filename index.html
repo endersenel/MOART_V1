@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CortexReact - SPPlab | MOART Reaksiyon & Hareket Zamanı Bataryası</title>
+  <title>CortexReact - SPPlab | MOART Reaksiyon & Parmak Test Bataryası</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -39,8 +39,14 @@
     .font-mono-custom {
       font-family: 'JetBrains Mono', monospace;
     }
-    .stimulus-target {
-      transition: background-color 0.05s, transform 0.05s;
+    .finger-target {
+      transition: background-color 0.1s, transform 0.1s;
+    }
+    .finger-target.active {
+      background-color: #38bdf8 !important;
+      box-shadow: 0 0 25px #38bdf8 !important;
+      color: #0f172a !important;
+      transform: scale(1.1);
     }
   </style>
 </head>
@@ -58,11 +64,11 @@
         <div>
           <div class="flex items-center space-x-2">
             <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">
-              CortexReact
+              CortexReact Pro
             </h1>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 uppercase tracking-wider">MOART v3.0 Pro</span>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 uppercase tracking-wider">MOART v3.2</span>
           </div>
-          <p class="text-xs text-slate-400 hidden sm:block">Sporda Performans Psikolojisi Lab (SPPlab) - Reaksiyon & Hareket Zamanı</p>
+          <p class="text-xs text-slate-400 hidden sm:block">Sporda Performans Psikolojisi Lab (SPPlab) - MOART Reaksiyon Bataryası</p>
         </div>
       </div>
 
@@ -109,8 +115,9 @@
           <option value="simpleVis">⚡ 1. Basit Görsel Reaksiyon (SRT)</option>
           <option value="simpleAud">🔊 2. Basit İşitsel Reaksiyon (Audio SRT)</option>
           <option value="choice">🔀 3. Seçimlik Reaksiyon (Choice CRT - Sol/Sağ)</option>
-          <option value="gonogo">🛑 4. Ayırt Etme / Dürtü (Go / No-Go)</option>
-          <option value="movement">🏃 5. Reaksiyon + Hareket Zamanı (RT+MT)</option>
+          <option value="fingers5">🖐️ 4. Sağ 5 Parmak & Sol 5 Parmak Reaksiyonu</option>
+          <option value="gonogo">🛑 5. Ayırt Etme / Dürtü (Go / No-Go)</option>
+          <option value="movement">🏃 6. Reaksiyon + Hareket Zamanı (RT+MT)</option>
         </select>
       </div>
 
@@ -159,23 +166,53 @@
       </div>
 
       <!-- STIMULUS DISPLAY CANVAS / TARGET AREA -->
-      <div id="stimulusContainer" class="w-full max-w-3xl my-auto grid grid-cols-2 gap-8 items-center justify-center p-4">
+      <div id="stimulusContainer" class="w-full max-w-4xl my-auto flex flex-col items-center justify-center p-4">
         
-        <!-- Left Stimulus Target -->
-        <div id="targetLeft" class="stimulus-target h-52 rounded-3xl bg-slate-900 border-4 border-slate-800 flex flex-col items-center justify-center cursor-pointer shadow-xl relative overflow-hidden">
-          <span class="text-xs font-extrabold uppercase tracking-widest text-slate-500 mb-2">SOL UYARAN</span>
-          <div id="leftLight" class="w-20 h-20 rounded-full bg-slate-800 border-2 border-slate-700 shadow-inner"></div>
+        <!-- Standard 2-Target Container (For SRT, CRT, Go/No-Go) -->
+        <div id="standardTargets" class="w-full grid grid-cols-2 gap-8 items-center justify-center">
+          <div id="targetLeft" class="stimulus-target h-52 rounded-3xl bg-slate-900 border-4 border-slate-800 flex flex-col items-center justify-center cursor-pointer shadow-xl relative overflow-hidden">
+            <span class="text-xs font-extrabold uppercase tracking-widest text-slate-500 mb-2">SOL UYARAN</span>
+            <div id="leftLight" class="w-20 h-20 rounded-full bg-slate-800 border-2 border-slate-700 shadow-inner"></div>
+          </div>
+
+          <div id="targetRight" class="stimulus-target h-52 rounded-3xl bg-slate-900 border-4 border-slate-800 flex flex-col items-center justify-center cursor-pointer shadow-xl relative overflow-hidden">
+            <span class="text-xs font-extrabold uppercase tracking-widest text-slate-500 mb-2">SAĞ UYARAN</span>
+            <div id="rightLight" class="w-20 h-20 rounded-full bg-slate-800 border-2 border-slate-700 shadow-inner"></div>
+          </div>
         </div>
 
-        <!-- Right Stimulus Target -->
-        <div id="targetRight" class="stimulus-target h-52 rounded-3xl bg-slate-900 border-4 border-slate-800 flex flex-col items-center justify-center cursor-pointer shadow-xl relative overflow-hidden">
-          <span class="text-xs font-extrabold uppercase tracking-widest text-slate-500 mb-2">SAĞ UYARAN</span>
-          <div id="rightLight" class="w-20 h-20 rounded-full bg-slate-800 border-2 border-slate-700 shadow-inner"></div>
+        <!-- 10-Finger Choice Target Layout (Sağ 5 Parmak & Sol 5 Parmak) -->
+        <div id="fingerTargets" class="w-full hidden grid-cols-2 gap-6 items-center justify-center">
+          
+          <!-- Sol El 5 Parmak -->
+          <div class="bg-slate-900 border-2 border-slate-800 rounded-3xl p-4 flex flex-col items-center">
+            <span class="text-xs font-black text-cyan-400 uppercase tracking-widest mb-3">SOL EL (5 PARMAK)</span>
+            <div class="flex gap-2 justify-center w-full">
+              <button data-finger="L1" class="finger-target flex-1 py-4 bg-slate-950 border border-slate-800 rounded-2xl text-xs font-bold text-slate-300">Baş</button>
+              <button data-finger="L2" class="finger-target flex-1 py-4 bg-slate-950 border border-slate-800 rounded-2xl text-xs font-bold text-slate-300">İşaret</button>
+              <button data-finger="L3" class="finger-target flex-1 py-4 bg-slate-950 border border-slate-800 rounded-2xl text-xs font-bold text-slate-300">Orta</button>
+              <button data-finger="L4" class="finger-target flex-1 py-4 bg-slate-950 border border-slate-800 rounded-2xl text-xs font-bold text-slate-300">Yüzük</button>
+              <button data-finger="L5" class="finger-target flex-1 py-4 bg-slate-950 border border-slate-800 rounded-2xl text-xs font-bold text-slate-300">Serçe</button>
+            </div>
+          </div>
+
+          <!-- Sağ El 5 Parmak -->
+          <div class="bg-slate-900 border-2 border-slate-800 rounded-3xl p-4 flex flex-col items-center">
+            <span class="text-xs font-black text-emerald-400 uppercase tracking-widest mb-3">SAĞ EL (5 PARMAK)</span>
+            <div class="flex gap-2 justify-center w-full">
+              <button data-finger="R1" class="finger-target flex-1 py-4 bg-slate-950 border border-slate-800 rounded-2xl text-xs font-bold text-slate-300">Baş</button>
+              <button data-finger="R2" class="finger-target flex-1 py-4 bg-slate-950 border border-slate-800 rounded-2xl text-xs font-bold text-slate-300">İşaret</button>
+              <button data-finger="R3" class="finger-target flex-1 py-4 bg-slate-950 border border-slate-800 rounded-2xl text-xs font-bold text-slate-300">Orta</button>
+              <button data-finger="R4" class="finger-target flex-1 py-4 bg-slate-950 border border-slate-800 rounded-2xl text-xs font-bold text-slate-300">Yüzük</button>
+              <button data-finger="R5" class="finger-target flex-1 py-4 bg-slate-950 border border-slate-800 rounded-2xl text-xs font-bold text-slate-300">Serçe</button>
+            </div>
+          </div>
+
         </div>
 
       </div>
 
-      <!-- MOART HOME BUTTON (HAREKET ZAMANI İÇİN BAŞLANGIÇ DÜĞMESİ) -->
+      <!-- MOART HOME BUTTON (HAREKET ZAMANI İÇİN) -->
       <div id="homeButtonContainer" class="w-full max-w-md hidden flex-col items-center justify-center my-2">
         <div id="homeButton" class="w-full py-4 bg-indigo-950/80 border-2 border-indigo-500/50 rounded-2xl text-center font-bold text-indigo-300 text-xs shadow-lg cursor-pointer transition active:scale-95">
           <i class="fa-solid fa-fingerprint text-lg block mb-1"></i>
@@ -188,7 +225,7 @@
     <!-- TRAINER & CONTROL PANEL -->
     <div class="flex items-center justify-between w-full max-w-4xl mx-auto bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
       <div class="text-xs text-slate-400 font-medium">
-        SPPlab CortexReact System | MOART Laboratuvar Standardı Reaksiyon Ölçümü
+        SPPlab CortexReact System | MOART Sağ/Sol 10 Parmak Reaksiyon Standartları Entegre
       </div>
       <div class="flex space-x-2">
         <button onclick="openReportModal()" class="bg-indigo-950/60 hover:bg-indigo-900/80 border border-indigo-700/50 text-indigo-300 font-bold py-2 px-4 rounded-xl transition text-xs flex items-center space-x-1.5">
@@ -211,7 +248,7 @@
           </div>
           <div>
             <h3 class="text-lg font-bold text-white">CortexReact MOART Raporu</h3>
-            <p class="text-xs text-slate-400">SPPlab Reaksiyon & Hareket Zamanı Skor Kartı</p>
+            <p class="text-xs text-slate-400">SPPlab Reaksiyon & Parmak Skor Kartı</p>
           </div>
         </div>
         <button onclick="closeReportModal()" class="text-slate-400 hover:text-white p-2 text-lg">
@@ -222,7 +259,7 @@
       <div class="grid grid-cols-2 gap-3 mb-6">
         <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800/80">
           <span class="text-[11px] text-slate-400 font-medium uppercase">Test Protokolü</span>
-          <p id="rptTest" class="text-xs font-bold text-cyan-400 font-mono-custom mt-1">Basit Görsel RT</p>
+          <p id="rptTest" class="text-xs font-bold text-cyan-400 font-mono-custom mt-1">Görsel SRT</p>
         </div>
         <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800/80">
           <span class="text-[11px] text-slate-400 font-medium uppercase">Ort. Reaksiyon (RT)</span>
@@ -253,14 +290,12 @@
 
   <!-- JAVASCRIPT LOGIC -->
   <script>
-    // State Variables
     let activeTest = 'simpleVis';
     let totalReps = 10;
     let currentRep = 0;
     let isTestActive = false;
     let isWaitingForStimulus = false;
 
-    // Timing Variables (ms)
     let stimulusTime = 0;
     let releaseTime = 0;
     let touchTime = 0;
@@ -269,17 +304,25 @@
     let movementTimes = [];
     let errorCount = 0;
 
-    let targetSide = 'left'; // 'left' or 'right'
-    let targetColor = 'green'; // 'green' (Go) or 'red' (No-Go)
+    let targetSide = 'left';
+    let targetColor = 'green';
+    let activeFingerCode = ''; // E.g., 'L1', 'R3'
+
+    const fingerCodes = ['L1', 'L2', 'L3', 'L4', 'L5', 'R1', 'R2', 'R3', 'R4', 'R5'];
+    const fingerNames = {
+      'L1': 'Sol Baş', 'L2': 'Sol İşaret', 'L3': 'Sol Orta', 'L4': 'Sol Yüzük', 'L5': 'Sol Serçe',
+      'R1': 'Sağ Baş', 'R2': 'Sağ İşaret', 'R3': 'Sağ Orta', 'R4': 'Sağ Yüzük', 'R5': 'Sağ Serçe'
+    };
 
     let stimulusTimeout = null;
     let audioCtx = null;
 
-    // DOM Elements
     const targetLeft = document.getElementById('targetLeft');
     const targetRight = document.getElementById('targetRight');
     const leftLight = document.getElementById('leftLight');
     const rightLight = document.getElementById('rightLight');
+    const standardTargets = document.getElementById('standardTargets');
+    const fingerTargets = document.getElementById('fingerTargets');
     const homeButtonContainer = document.getElementById('homeButtonContainer');
     const homeButton = document.getElementById('homeButton');
     const instructionBanner = document.getElementById('instructionBanner');
@@ -311,6 +354,16 @@
       activeTest = test;
       resetState();
       
+      if (activeTest === 'fingers5') {
+        standardTargets.classList.add('hidden');
+        fingerTargets.classList.remove('hidden');
+        fingerTargets.classList.add('grid');
+      } else {
+        fingerTargets.classList.add('hidden');
+        fingerTargets.classList.remove('grid');
+        standardTargets.classList.remove('hidden');
+      }
+
       if (activeTest === 'movement') {
         homeButtonContainer.classList.remove('hidden');
         homeButtonContainer.classList.add('flex');
@@ -340,6 +393,10 @@
       leftLight.style.boxShadow = 'none';
       rightLight.style.backgroundColor = '#1e293b';
       rightLight.style.boxShadow = 'none';
+
+      document.querySelectorAll('.finger-target').forEach(btn => {
+        btn.classList.remove('active');
+      });
     }
 
     function startTestBattery() {
@@ -361,15 +418,16 @@
       resetLights();
       isWaitingForStimulus = true;
 
-      if (activeTest === 'movement') {
-        instructionBanner.textContent = `[Tekrar ${currentRep + 1}/${totalReps}] Palmağınızı AŞAĞIDAKİ DÜĞMEDE basılı tutun ve ışığı bekleyin!`;
+      if (activeTest === 'fingers5') {
+        instructionBanner.textContent = `[Tekrar ${currentRep + 1}/${totalReps}] MAVİ parlayan parmağın üzerine en hızlı şekilde basın!`;
+      } else if (activeTest === 'movement') {
+        instructionBanner.textContent = `[Tekrar ${currentRep + 1}/${totalReps}] Parmağınızı AŞAĞIDAKİ DÜĞMEDE basılı tutun ve ışığı bekleyin!`;
       } else if (activeTest === 'gonogo') {
         instructionBanner.textContent = `[Tekrar ${currentRep + 1}/${totalReps}] YEŞİL ışıkta dokunun! KIRMIZI ışıkta DOKUNMAYIN!`;
       } else {
         instructionBanner.textContent = `[Tekrar ${currentRep + 1}/${totalReps}] Hazır olun... Işık/Ses çıktığında EN HIZLI şekilde dokunun!`;
       }
 
-      // Random Delay (1500ms - 3500ms)
       const randomDelay = Math.floor(Math.random() * 2000) + 1500;
       stimulusTimeout = setTimeout(triggerStimulus, randomDelay);
     }
@@ -379,6 +437,13 @@
       isWaitingForStimulus = false;
       stimulusTime = Date.now();
 
+      if (activeTest === 'fingers5') {
+        activeFingerCode = fingerCodes[Math.floor(Math.random() * fingerCodes.length)];
+        const targetBtn = document.querySelector(`[data-finger="${activeFingerCode}"]`);
+        if (targetBtn) targetBtn.classList.add('active');
+        return;
+      }
+
       targetSide = Math.random() > 0.5 ? 'right' : 'left';
       targetColor = activeTest === 'gonogo' ? (Math.random() > 0.4 ? 'green' : 'red') : 'green';
 
@@ -386,29 +451,26 @@
       const colorHex = targetColor === 'green' ? '#22c55e' : '#ef4444';
 
       if (activeTest === 'simpleAud') {
-        playBeep(1000, 0.15); // Audio Trigger
+        playBeep(1000, 0.15);
+        leftLight.style.backgroundColor = '#22c55e';
+        rightLight.style.backgroundColor = '#22c55e';
+      } else if (activeTest === 'simpleVis') {
         leftLight.style.backgroundColor = '#22c55e';
         rightLight.style.backgroundColor = '#22c55e';
       } else {
-        if (activeTest === 'simpleVis') {
-          leftLight.style.backgroundColor = '#22c55e';
-          rightLight.style.backgroundColor = '#22c55e';
-        } else {
-          activeLight.style.backgroundColor = colorHex;
-          activeLight.style.boxShadow = `0 0 30px ${colorHex}`;
-        }
+        activeLight.style.backgroundColor = colorHex;
+        activeLight.style.boxShadow = `0 0 30px ${colorHex}`;
       }
     }
 
-    function handleInput(side) {
+    function handleInput(inputCode) {
       if (!isTestActive) return;
 
-      // Erken Basma (False Start)
       if (isWaitingForStimulus) {
         clearTimeout(stimulusTimeout);
         errorCount++;
         document.getElementById('badgeErrors').textContent = errorCount;
-        instructionBanner.textContent = '⚠️ ERKEN BASILDI! Lütfen ışık yanana kadar bekleyin.';
+        instructionBanner.textContent = '⚠️ ERKEN BASILDI! Lütfen uyaran görünene kadar bekleyin.';
         playBeep(250, 0.2);
         setTimeout(nextTrial, 1200);
         return;
@@ -417,6 +479,19 @@
       touchTime = Date.now();
       const rt = (releaseTime > 0 ? releaseTime : touchTime) - stimulusTime;
       const mt = releaseTime > 0 ? touchTime - releaseTime : 0;
+
+      // 5-FINGER CHOICE CHECK
+      if (activeTest === 'fingers5') {
+        if (inputCode !== activeFingerCode) {
+          errorCount++;
+          document.getElementById('badgeErrors').textContent = errorCount;
+          instructionBanner.textContent = `❌ YANLIŞ PARMAK! Doğru hedef: ${fingerNames[activeFingerCode]}`;
+          playBeep(250, 0.2);
+          currentRep++;
+          setTimeout(nextTrial, 1200);
+          return;
+        }
+      }
 
       // GO / NO-GO INHIBITION CHECK
       if (activeTest === 'gonogo' && targetColor === 'red') {
@@ -430,7 +505,7 @@
       }
 
       // CHOICE CRT SIDE CHECK
-      if (activeTest === 'choice' && side !== targetSide) {
+      if (activeTest === 'choice' && inputCode !== targetSide) {
         errorCount++;
         document.getElementById('badgeErrors').textContent = errorCount;
         instructionBanner.textContent = '❌ TERS TARAF! Doğru taraftaki ışığa basmalısınız.';
@@ -440,7 +515,6 @@
         return;
       }
 
-      // VALID SUCCESSFUL TRIAL
       reactionTimes.push(rt);
       if (mt > 0) movementTimes.push(mt);
 
@@ -453,11 +527,18 @@
     }
 
     function setupEvents() {
-      // Target Click Handlers
       targetLeft.addEventListener('pointerdown', () => handleInput('left'));
       targetRight.addEventListener('pointerdown', () => handleInput('right'));
 
-      // Home Button Pointer Events for Movement Time (MT)
+      // 10-Finger Click Listeners
+      document.querySelectorAll('.finger-target').forEach(btn => {
+        btn.addEventListener('pointerdown', () => {
+          const code = btn.getAttribute('data-finger');
+          handleInput(code);
+        });
+      });
+
+      // Home Button Pointer Events
       homeButton.addEventListener('pointerdown', () => {
         if (activeTest === 'movement' && isWaitingForStimulus) {
           homeButton.style.backgroundColor = '#22c55e';
@@ -468,7 +549,7 @@
         if (activeTest === 'movement') {
           homeButton.style.backgroundColor = '';
           if (stimulusTime > 0 && releaseTime === 0) {
-            releaseTime = Date.now(); // RT End & MT Start
+            releaseTime = Date.now();
           }
         }
       });
@@ -492,7 +573,7 @@
       const avgRT = reactionTimes.length > 0 ? Math.round(reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length) : 0;
       const avgMT = movementTimes.length > 0 ? Math.round(movementTimes.reduce((a, b) => a + b, 0) / movementTimes.length) : 0;
 
-      const testNames = { simpleVis: 'Basit Görsel SRT', simpleAud: 'Basit İşitsel SRT', choice: 'Seçimlik CRT', gonogo: 'Go / No-Go', movement: 'RT + MT Hareket Zamanı' };
+      const testNames = { simpleVis: 'Basit Görsel SRT', simpleAud: 'Basit İşitsel SRT', choice: 'Seçimlik CRT', fingers5: 'Sağ/Sol 5 Parmak RT', gonogo: 'Go / No-Go', movement: 'RT + MT Hareket Zamanı' };
       document.getElementById('rptTest').textContent = testNames[activeTest];
       document.getElementById('rptRT').textContent = `${avgRT} ms`;
       document.getElementById('rptMT').textContent = `${avgMT} ms`;
