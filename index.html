@@ -46,8 +46,8 @@
       background-color: #38bdf8 !important;
       border-color: #0284c7 !important;
       color: #0f172a !important;
-      box-shadow: 0 0 35px #38bdf8 !important;
-      transform: scale(1.12);
+      box-shadow: 0 0 45px #38bdf8 !important;
+      transform: scale(1.15);
     }
     .finger-btn.active i {
       color: #0f172a !important;
@@ -70,9 +70,9 @@
             <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">
               CortexReact Pro
             </h1>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 uppercase tracking-wider">MOART v3.5 Ergonomic</span>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 uppercase tracking-wider">MOART v3.7 Fixed</span>
           </div>
-          <p class="text-xs text-slate-400 hidden sm:block">Sporda Performans Psikolojisi Lab (SPPlab) - Piyano Pozisyonlu MOART Bataryası</p>
+          <p class="text-xs text-slate-400 hidden sm:block">Sporda Performans Psikolojisi Lab (SPPlab) - Geniş Piyano Pozisyonlu MOART Bataryası</p>
         </div>
       </div>
 
@@ -116,7 +116,7 @@
           <i class="fa-solid fa-vial text-cyan-400 mr-1.5"></i> MOART Test Protokolü
         </label>
         <select id="testSelect" onchange="changeTest(this.value)" class="bg-slate-950 border border-slate-800 text-slate-200 text-xs font-semibold rounded-xl p-2.5 focus:ring-2 focus:ring-cyan-500 outline-none">
-          <option value="fingers5">🎹 Piyano Pozisyonlu 10 Parmak Reaksiyonu</option>
+          <option value="fingers5">🎹 Geniş Piyano Pozisyonlu 10 Parmak Reaksiyonu</option>
           <option value="simpleVis">⚡ Basit Görsel Reaksiyon (SRT)</option>
           <option value="simpleAud">🔊 Basit İşitsel Reaksiyon (Audio SRT)</option>
           <option value="choice">🔀 Seçimlik Reaksiyon (CRT - Sol/Sağ)</option>
@@ -150,11 +150,12 @@
       <!-- 4. Control Action Buttons -->
       <div class="flex flex-col justify-between">
         <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center">
-          <i class="fa-solid fa-play text-emerald-400 mr-1.5"></i> Testi Başlat
+          <i class="fa-solid fa-play text-emerald-400 mr-1.5"></i> Kontrol Paneli
         </label>
         <div class="flex gap-2">
-          <button id="btnStartTest" onclick="startTestBattery()" class="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold py-2 px-3 rounded-xl shadow-lg transition text-xs">
-            TESTİ BAŞLAT
+          <button id="btnStartTest" onclick="toggleTestBattery()" class="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold py-2.5 px-3 rounded-xl shadow-lg transition text-xs flex items-center justify-center gap-2">
+            <i class="fa-solid fa-play"></i>
+            <span>TESTİ BAŞLAT</span>
           </button>
         </div>
       </div>
@@ -162,15 +163,15 @@
     </div>
 
     <!-- MAIN DISPLAY AREA (MOART STAGE) -->
-    <div id="stageContainer" class="w-full flex-1 bg-slate-900/50 border-2 border-slate-800 rounded-3xl p-6 flex flex-col items-center justify-between relative shadow-2xl overflow-hidden min-h-[440px]">
+    <div id="stageContainer" class="w-full flex-1 bg-slate-900/50 border-2 border-slate-800 rounded-3xl p-4 sm:p-6 flex flex-col items-center justify-between relative shadow-2xl overflow-hidden min-h-[480px]">
       
       <!-- Dynamic Instruction Banner -->
       <div id="instructionBanner" class="w-full max-w-xl bg-slate-950/90 border border-cyan-500/40 text-cyan-300 px-4 py-2 rounded-2xl text-xs font-bold z-10 shadow-lg text-center">
-        Ellerinizi masa üzerinde piyano çalar gibi parmak izi dairelerinin üzerine koyun ve 'TESTİ BAŞLAT'a basın.
+        Ellerinizi rahatça yerleştirin ve hazır olduğunuzda 'TESTİ BAŞLAT'a basın.
       </div>
 
       <!-- STIMULUS DISPLAY CANVAS / TARGET AREA -->
-      <div id="stimulusContainer" class="w-full max-w-5xl my-auto flex flex-col items-center justify-center p-2">
+      <div id="stimulusContainer" class="w-full h-full my-auto flex flex-col items-center justify-center p-2">
         
         <!-- Standard 2-Target Container (For SRT, CRT, Go/No-Go) -->
         <div id="standardTargets" class="w-full hidden grid-cols-2 gap-8 items-center justify-center max-w-2xl">
@@ -185,103 +186,103 @@
           </div>
         </div>
 
-        <!-- PIANO HAND POSITION LAYOUT (Piyano Çalar Pozisyonu Daireleri) -->
-        <div id="pianoFingerTargets" class="w-full grid grid-cols-2 gap-8 items-center justify-center">
+        <!-- PIANO HAND POSITION LAYOUT -->
+        <div id="pianoFingerTargets" class="w-full grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-center justify-center">
           
           <!-- SOL EL PİYANO DİZİLİMİ -->
-          <div class="bg-slate-900/90 border-2 border-slate-800/80 rounded-3xl p-6 flex flex-col items-center relative shadow-2xl">
-            <span class="text-xs font-black text-cyan-400 uppercase tracking-widest mb-6 flex items-center gap-2">
+          <div class="bg-slate-900/90 border-2 border-slate-800/80 rounded-3xl p-6 sm:p-8 flex flex-col items-center relative shadow-2xl">
+            <span class="text-xs sm:text-sm font-black text-cyan-400 uppercase tracking-widest mb-8 flex items-center gap-2">
               <i class="fa-solid fa-hand fa-flip-horizontal"></i> SOL EL (PİYANO POZİSYONU)
             </span>
             
-            <div class="flex items-end justify-center space-x-3 w-full h-44 px-2">
+            <div class="flex items-end justify-between w-full h-56 sm:h-64 px-2 sm:px-4">
               <!-- Serçe (L5) -->
-              <div class="flex flex-col items-center gap-2 mb-2">
-                <button data-finger="L5" class="finger-btn w-14 h-14 rounded-full bg-slate-950 border-2 border-slate-700 flex flex-col items-center justify-center shadow-lg cursor-pointer">
-                  <i class="fa-solid fa-fingerprint text-xl text-slate-500"></i>
+              <div class="flex flex-col items-center gap-3 mb-2">
+                <button data-finger="L5" class="finger-btn w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-950 border-2 border-slate-700 flex flex-col items-center justify-center shadow-xl cursor-pointer">
+                  <i class="fa-solid fa-fingerprint text-2xl sm:text-3xl text-slate-500"></i>
                 </button>
-                <span class="text-[10px] font-extrabold text-slate-400 uppercase">Serçe</span>
+                <span class="text-xs font-extrabold text-slate-400 uppercase">Serçe</span>
               </div>
               
               <!-- Yüzük (L4) -->
-              <div class="flex flex-col items-center gap-2 mb-8">
-                <button data-finger="L4" class="finger-btn w-14 h-14 rounded-full bg-slate-950 border-2 border-slate-700 flex flex-col items-center justify-center shadow-lg cursor-pointer">
-                  <i class="fa-solid fa-fingerprint text-xl text-slate-500"></i>
+              <div class="flex flex-col items-center gap-3 mb-12">
+                <button data-finger="L4" class="finger-btn w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-950 border-2 border-slate-700 flex flex-col items-center justify-center shadow-xl cursor-pointer">
+                  <i class="fa-solid fa-fingerprint text-2xl sm:text-3xl text-slate-500"></i>
                 </button>
-                <span class="text-[10px] font-extrabold text-slate-400 uppercase">Yüzük</span>
+                <span class="text-xs font-extrabold text-slate-400 uppercase">Yüzük</span>
               </div>
 
               <!-- Orta (L3) -->
-              <div class="flex flex-col items-center gap-2 mb-14">
-                <button data-finger="L3" class="finger-btn w-14 h-14 rounded-full bg-slate-950 border-2 border-slate-700 flex flex-col items-center justify-center shadow-lg cursor-pointer">
-                  <i class="fa-solid fa-fingerprint text-xl text-slate-500"></i>
+              <div class="flex flex-col items-center gap-3 mb-20">
+                <button data-finger="L3" class="finger-btn w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-950 border-2 border-slate-700 flex flex-col items-center justify-center shadow-xl cursor-pointer">
+                  <i class="fa-solid fa-fingerprint text-2xl sm:text-3xl text-slate-500"></i>
                 </button>
-                <span class="text-[10px] font-extrabold text-slate-400 uppercase">Orta</span>
+                <span class="text-xs font-extrabold text-slate-400 uppercase">Orta</span>
               </div>
 
               <!-- İşaret (L2) -->
-              <div class="flex flex-col items-center gap-2 mb-8">
-                <button data-finger="L2" class="finger-btn w-14 h-14 rounded-full bg-slate-950 border-2 border-slate-700 flex flex-col items-center justify-center shadow-lg cursor-pointer">
-                  <i class="fa-solid fa-fingerprint text-xl text-slate-500"></i>
+              <div class="flex flex-col items-center gap-3 mb-12">
+                <button data-finger="L2" class="finger-btn w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-950 border-2 border-slate-700 flex flex-col items-center justify-center shadow-xl cursor-pointer">
+                  <i class="fa-solid fa-fingerprint text-2xl sm:text-3xl text-slate-500"></i>
                 </button>
-                <span class="text-[10px] font-extrabold text-slate-400 uppercase">İşaret</span>
+                <span class="text-xs font-extrabold text-slate-400 uppercase">İşaret</span>
               </div>
 
               <!-- Başparmak (L1) -->
-              <div class="flex flex-col items-center gap-2 mb-0">
-                <button data-finger="L1" class="finger-btn w-14 h-14 rounded-full bg-slate-950 border-2 border-slate-700 flex flex-col items-center justify-center shadow-lg cursor-pointer">
-                  <i class="fa-solid fa-fingerprint text-xl text-slate-500"></i>
+              <div class="flex flex-col items-center gap-3 mb-0">
+                <button data-finger="L1" class="finger-btn w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-950 border-2 border-slate-700 flex flex-col items-center justify-center shadow-xl cursor-pointer">
+                  <i class="fa-solid fa-fingerprint text-2xl sm:text-3xl text-slate-500"></i>
                 </button>
-                <span class="text-[10px] font-extrabold text-slate-400 uppercase">Baş</span>
+                <span class="text-xs font-extrabold text-slate-400 uppercase">Baş</span>
               </div>
             </div>
           </div>
 
           <!-- SAĞ EL PİYANO DİZİLİMİ -->
-          <div class="bg-slate-900/90 border-2 border-slate-800/80 rounded-3xl p-6 flex flex-col items-center relative shadow-2xl">
-            <span class="text-xs font-black text-emerald-400 uppercase tracking-widest mb-6 flex items-center gap-2">
+          <div class="bg-slate-900/90 border-2 border-slate-800/80 rounded-3xl p-6 sm:p-8 flex flex-col items-center relative shadow-2xl">
+            <span class="text-xs sm:text-sm font-black text-emerald-400 uppercase tracking-widest mb-8 flex items-center gap-2">
               SAĞ EL (PİYANO POZİSYONU) <i class="fa-solid fa-hand"></i>
             </span>
 
-            <div class="flex items-end justify-center space-x-3 w-full h-44 px-2">
+            <div class="flex items-end justify-between w-full h-56 sm:h-64 px-2 sm:px-4">
               <!-- Başparmak (R1) -->
-              <div class="flex flex-col items-center gap-2 mb-0">
-                <button data-finger="R1" class="finger-btn w-14 h-14 rounded-full bg-slate-950 border-2 border-slate-700 flex flex-col items-center justify-center shadow-lg cursor-pointer">
-                  <i class="fa-solid fa-fingerprint text-xl text-slate-500"></i>
+              <div class="flex flex-col items-center gap-3 mb-0">
+                <button data-finger="R1" class="finger-btn w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-950 border-2 border-slate-700 flex flex-col items-center justify-center shadow-xl cursor-pointer">
+                  <i class="fa-solid fa-fingerprint text-2xl sm:text-3xl text-slate-500"></i>
                 </button>
-                <span class="text-[10px] font-extrabold text-slate-400 uppercase">Baş</span>
+                <span class="text-xs font-extrabold text-slate-400 uppercase">Baş</span>
               </div>
 
               <!-- İşaret (R2) -->
-              <div class="flex flex-col items-center gap-2 mb-8">
-                <button data-finger="R2" class="finger-btn w-14 h-14 rounded-full bg-slate-950 border-2 border-slate-700 flex flex-col items-center justify-center shadow-lg cursor-pointer">
-                  <i class="fa-solid fa-fingerprint text-xl text-slate-500"></i>
+              <div class="flex flex-col items-center gap-3 mb-12">
+                <button data-finger="R2" class="finger-btn w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-950 border-2 border-slate-700 flex flex-col items-center justify-center shadow-xl cursor-pointer">
+                  <i class="fa-solid fa-fingerprint text-2xl sm:text-3xl text-slate-500"></i>
                 </button>
-                <span class="text-[10px] font-extrabold text-slate-400 uppercase">İşaret</span>
+                <span class="text-xs font-extrabold text-slate-400 uppercase">İşaret</span>
               </div>
 
               <!-- Orta (R3) -->
-              <div class="flex flex-col items-center gap-2 mb-14">
-                <button data-finger="R3" class="finger-btn w-14 h-14 rounded-full bg-slate-950 border-2 border-slate-700 flex flex-col items-center justify-center shadow-lg cursor-pointer">
-                  <i class="fa-solid fa-fingerprint text-xl text-slate-500"></i>
+              <div class="flex flex-col items-center gap-3 mb-20">
+                <button data-finger="R3" class="finger-btn w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-950 border-2 border-slate-700 flex flex-col items-center justify-center shadow-xl cursor-pointer">
+                  <i class="fa-solid fa-fingerprint text-2xl sm:text-3xl text-slate-500"></i>
                 </button>
-                <span class="text-[10px] font-extrabold text-slate-400 uppercase">Orta</span>
+                <span class="text-xs font-extrabold text-slate-400 uppercase">Orta</span>
               </div>
 
               <!-- Yüzük (R4) -->
-              <div class="flex flex-col items-center gap-2 mb-8">
-                <button data-finger="R4" class="finger-btn w-14 h-14 rounded-full bg-slate-950 border-2 border-slate-700 flex flex-col items-center justify-center shadow-lg cursor-pointer">
-                  <i class="fa-solid fa-fingerprint text-xl text-slate-500"></i>
+              <div class="flex flex-col items-center gap-3 mb-12">
+                <button data-finger="R4" class="finger-btn w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-950 border-2 border-slate-700 flex flex-col items-center justify-center shadow-xl cursor-pointer">
+                  <i class="fa-solid fa-fingerprint text-2xl sm:text-3xl text-slate-500"></i>
                 </button>
-                <span class="text-[10px] font-extrabold text-slate-400 uppercase">Yüzük</span>
+                <span class="text-xs font-extrabold text-slate-400 uppercase">Yüzük</span>
               </div>
 
               <!-- Serçe (R5) -->
-              <div class="flex flex-col items-center gap-2 mb-2">
-                <button data-finger="R5" class="finger-btn w-14 h-14 rounded-full bg-slate-950 border-2 border-slate-700 flex flex-col items-center justify-center shadow-lg cursor-pointer">
-                  <i class="fa-solid fa-fingerprint text-xl text-slate-500"></i>
+              <div class="flex flex-col items-center gap-3 mb-2">
+                <button data-finger="R5" class="finger-btn w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-950 border-2 border-slate-700 flex flex-col items-center justify-center shadow-xl cursor-pointer">
+                  <i class="fa-solid fa-fingerprint text-2xl sm:text-3xl text-slate-500"></i>
                 </button>
-                <span class="text-[10px] font-extrabold text-slate-400 uppercase">Serçe</span>
+                <span class="text-xs font-extrabold text-slate-400 uppercase">Serçe</span>
               </div>
             </div>
           </div>
@@ -303,7 +304,7 @@
     <!-- TRAINER & CONTROL PANEL -->
     <div class="flex items-center justify-between w-full max-w-4xl mx-auto bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
       <div class="text-xs text-slate-400 font-medium">
-        SPPlab CortexReact System | MOART Anatomi ve Piyano Pozisyonlu Sensör Standartları
+        SPPlab CortexReact System | MOART Ergonomik Genişletilmiş Daire Dizilimi
       </div>
       <div class="flex space-x-2">
         <button onclick="openReportModal()" class="bg-indigo-950/60 hover:bg-indigo-900/80 border border-indigo-700/50 text-indigo-300 font-bold py-2 px-4 rounded-xl transition text-xs flex items-center space-x-1.5">
@@ -404,6 +405,7 @@
     const homeButtonContainer = document.getElementById('homeButtonContainer');
     const homeButton = document.getElementById('homeButton');
     const instructionBanner = document.getElementById('instructionBanner');
+    const btnStartTest = document.getElementById('btnStartTest');
 
     window.addEventListener('DOMContentLoaded', () => {
       setupEvents();
@@ -431,7 +433,7 @@
 
     function changeTest(test) {
       activeTest = test;
-      resetState();
+      cancelTestBattery();
       
       if (activeTest === 'fingers5') {
         standardTargets.classList.add('hidden');
@@ -455,7 +457,9 @@
     }
 
     function resetState() {
-      clearTimeout(stimulusTimeout);
+      if (stimulusTimeout) clearTimeout(stimulusTimeout);
+      stimulusTimeout = null;
+      
       isTestActive = false;
       isWaitingForStimulus = false;
       currentRep = 0;
@@ -480,17 +484,38 @@
       });
     }
 
+    // TOGGLE START / CANCEL BUTTON
+    function toggleTestBattery() {
+      if (isTestActive) {
+        cancelTestBattery();
+      } else {
+        startTestBattery();
+      }
+    }
+
     function startTestBattery() {
       resetState();
       totalReps = parseInt(document.getElementById('repSelect').value);
       isTestActive = true;
-      document.getElementById('btnStartTest').textContent = 'İPTAL ET';
-      document.getElementById('btnStartTest').className = 'flex-1 bg-rose-600 hover:bg-rose-500 text-white font-extrabold py-2 px-3 rounded-xl transition text-xs';
+      
+      btnStartTest.innerHTML = '<i class="fa-solid fa-xmark"></i><span>İPTAL ET</span>';
+      btnStartTest.className = 'flex-1 bg-rose-600 hover:bg-rose-500 text-white font-extrabold py-2.5 px-3 rounded-xl transition text-xs flex items-center justify-center gap-2';
       
       nextTrial();
     }
 
+    function cancelTestBattery() {
+      resetState();
+      
+      btnStartTest.innerHTML = '<i class="fa-solid fa-play"></i><span>TESTİ BAŞLAT</span>';
+      btnStartTest.className = 'flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold py-2.5 px-3 rounded-xl transition text-xs flex items-center justify-center gap-2';
+      
+      instructionBanner.textContent = "Test iptal edildi. Başlamak için 'TESTİ BAŞLAT' butonuna basın.";
+    }
+
     function nextTrial() {
+      if (!isTestActive) return;
+
       if (currentRep >= totalReps) {
         finishBattery();
         return;
@@ -548,7 +573,7 @@
       if (!isTestActive) return;
 
       if (isWaitingForStimulus) {
-        clearTimeout(stimulusTimeout);
+        if (stimulusTimeout) clearTimeout(stimulusTimeout);
         errorCount++;
         document.getElementById('badgeErrors').textContent = errorCount;
         instructionBanner.textContent = '⚠️ ERKEN BASILDI! Lütfen uyaran görünene kadar bekleyin.';
@@ -605,23 +630,26 @@
     }
 
     function setupEvents() {
-      targetLeft.addEventListener('pointerdown', () => handleInput('left'));
-      targetRight.addEventListener('pointerdown', () => handleInput('right'));
+      targetLeft.addEventListener('pointerdown', (e) => { e.preventDefault(); handleInput('left'); });
+      targetRight.addEventListener('pointerdown', (e) => { e.preventDefault(); handleInput('right'); });
 
       document.querySelectorAll('.finger-btn').forEach(btn => {
-        btn.addEventListener('pointerdown', () => {
+        btn.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
           const code = btn.getAttribute('data-finger');
           handleInput(code);
         });
       });
 
-      homeButton.addEventListener('pointerdown', () => {
+      homeButton.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
         if (activeTest === 'movement' && isWaitingForStimulus) {
           homeButton.style.backgroundColor = '#22c55e';
         }
       });
 
-      homeButton.addEventListener('pointerup', () => {
+      homeButton.addEventListener('pointerup', (e) => {
+        e.preventDefault();
         if (activeTest === 'movement') {
           homeButton.style.backgroundColor = '';
           if (stimulusTime > 0 && releaseTime === 0) {
@@ -638,8 +666,8 @@
 
     function finishBattery() {
       isTestActive = false;
-      document.getElementById('btnStartTest').textContent = 'TESTİ BAŞLAT';
-      document.getElementById('btnStartTest').className = 'flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold py-2 px-3 rounded-xl shadow-lg transition text-xs';
+      btnStartTest.innerHTML = '<i class="fa-solid fa-play"></i><span>TESTİ BAŞLAT</span>';
+      btnStartTest.className = 'flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold py-2.5 px-3 rounded-xl transition text-xs flex items-center justify-center gap-2';
       
       instructionBanner.textContent = '🎉 MOART Test Bataryası Tamamlandı! Raporu inceleyebilirsiniz.';
       openReportModal();
